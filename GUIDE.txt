@@ -1,0 +1,64 @@
+Clipboard Guard — guide d'utilisation (français)
+=================================================
+
+Installation sur iPhone
+-----------------------
+1. Ouvrez le site dans Safari.
+2. Appuyez sur le bouton Partager (carré avec flèche vers le haut).
+3. Choisissez « Sur l'écran d'accueil », puis Ajouter.
+4. Lancez « Clipboard Guard » depuis l'écran d'accueil (mode autonome).
+
+Sur Android (Chrome) : menu ⋮ → « Installer l'application » ou
+« Ajouter à l'écran d'accueil ».
+
+Déverrouillage (geste caché)
+----------------------------
+Au lancement, l'écran affiche une surface neutre (horloge sobre).
+Ce n'est PAS l'écran de code.
+
+Pour révéler l'écran de code :
+  → Double-tapez rapidement près du HAUT de l'écran
+    (bandeau supérieur, environ les 15 % du haut).
+
+Puis saisissez le code : 6767
+Un code erroné affiche « Incorrect passcode » et l'app reste verrouillée.
+
+Code d'accès
+------------
+Code actuel : 6767
+
+Pour le changer, éditez dans app.js la constante clairement marquée :
+  // ===== PASSCODE (change here) =====
+  const PASSCODE = "6767";
+
+Verrouillage
+------------
+Dans l'app, le bouton rouge « Lock » renvoie à la surface leurre
+(horloge). Le geste caché est à nouveau nécessaire.
+
+Fonctionnement
+--------------
+Interrupteur « Auto-clear clipboard » : préférence locale mémorisée.
+Compteur « After N s » : de 5 à 300 secondes, pas de 5 (défaut 30).
+« Clear now » tente navigator.clipboard.writeText('') (au mieux : peut
+exiger un geste utilisateur ou une permission) puis ajoute « <date ISO>:
+cleared » à l'historique local.
+Section « Local history (this app only) » : les 12 dernières lignes.
+
+LIMITES IMPORTANTES (à lire)
+----------------------------
+Un navigateur NE PEUT PAS surveiller ni vider le presse-papiers système
+en arrière-plan. « Auto-clear » n'est qu'une préférence stockée : elle ne
+déclenche aucun effacement automatique réel. « Clear now » est au mieux
+(best effort) et peut échouer sans geste utilisateur ou permission
+d'écriture du presse-papiers ; l'historique local est écrit dans tous les
+cas. Pour un vrai effacement, utilisez les fonctions du système.
+
+Tout est LOCAL : les données sont mémorisées uniquement dans le
+navigateur (localStorage) de cet appareil. Aucun appel réseau, aucune
+analytique. Effacer les données du site efface tout. Ce guide n'est pas
+lié depuis l'application.
+
+Fichiers
+--------
+Tout est statique (HTML/CSS/JS), sans étape de build ni CDN externe.

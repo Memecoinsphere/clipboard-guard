@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<meta name="color-scheme" content="dark">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Clipboard Guard">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; connect-src 'none'; manifest-src 'self'; worker-src 'self'">
+<title>Clipboard Guard</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="64x64" href="icons/icon-64.png">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<!-- Decoy surface: default on load. Passcode revealed by double-tap in top ~15% strip. -->
+<section id="decoy" class="screen" aria-hidden="false">
+  <div class="decoy-clock">
+    <div id="decoyTime" class="decoy-time">--:--</div>
+    <div id="decoyDate" class="decoy-date"></div>
+  </div>
+</section>
+
+<!-- Passcode screen (hidden until gesture) -->
+<section id="lock" class="screen" hidden>
+  <div class="lock-inner">
+    <svg class="lock-glyph" viewBox="0 0 24 24" aria-hidden="true">
+      <path fill="currentColor" d="M12 2a5 5 0 0 0-5 5v3H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-1V7a5 5 0 0 0-5-5zm-3 5a3 3 0 1 1 6 0v3H9V7zm3 7a1.5 1.5 0 0 1 .75 2.79V19h-1.5v-2.21A1.5 1.5 0 0 1 12 12z"/>
+    </svg>
+    <h1 class="lock-title">Clipboard Guard</h1>
+    <p class="lock-sub">Enter passcode</p>
+    <div id="dots" class="dots" aria-live="polite">
+      <span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span>
+    </div>
+    <p id="lockError" class="lock-error" hidden>Incorrect passcode</p>
+    <div class="keypad" id="keypad">
+      <button type="button" data-k="1">1</button>
+      <button type="button" data-k="2">2</button>
+      <button type="button" data-k="3">3</button>
+      <button type="button" data-k="4">4</button>
+      <button type="button" data-k="5">5</button>
+      <button type="button" data-k="6">6</button>
+      <button type="button" data-k="7">7</button>
+      <button type="button" data-k="8">8</button>
+      <button type="button" data-k="9">9</button>
+      <button type="button" class="ghost" tabindex="-1" aria-hidden="true"></button>
+      <button type="button" data-k="0">0</button>
+      <button type="button" data-k="del" class="del" aria-label="Delete">⌫</button>
+    </div>
+  </div>
+</section>
+
+<!-- App panel -->
+<section id="panel" class="screen" hidden>
+  <header class="panel-header">
+    <h1>Clipboard Guard</h1>
+    <span class="badge">LOCAL ONLY</span>
+  </header>
+  <main class="panel-body">
+    <section class="group">
+      <h2 class="group-title">Clipboard</h2>
+      <div class="card">
+        <label class="row">
+          <div class="row-text">
+            <span class="row-title">Auto-clear clipboard</span>
+            <span class="row-sub">Local preference</span>
+          </div>
+          <input type="checkbox" id="autoClear" class="toggle">
+        </label>
+        <div class="row static">
+          <div class="row-text"><span class="row-title">After N s</span></div>
+          <div class="stepper" role="group" aria-label="After N seconds">
+            <button type="button" id="decBtn" aria-label="Decrease">−</button>
+            <span id="secsVal" class="row-value stepper-val">30</span>
+            <button type="button" id="incBtn" aria-label="Increase">+</button>
+          </div>
+        </div>
+        <button type="button" id="clearBtn" class="action-btn">Clear now</button>
+      </div>
+      <p class="caption">Simulated: a web app cannot monitor or auto-clear the system clipboard in the background. "Clear now" is best effort and may need a user gesture or permission; "Auto-clear" is only a stored preference here.</p>
+    </section>
+
+    <section class="group">
+      <h2 class="group-title">Local history (this app only)</h2>
+      <div class="card"><ul id="log" class="log"></ul></div>
+      <p class="caption">Last 12 entries, stored locally only.</p>
+    </section>
+    <button type="button" id="lockPanelBtn" class="lock-panel-btn">Lock</button>
+  </main>
+</section>
+
+<script src="app.js"></script>
+</body>
+</html>
